@@ -1,35 +1,30 @@
 
-# coding: utf-8
-
-# In[121]:
-
 #Alternative energy functions can be imported here
 import energy_function
 from random import randint, random
 from math import exp
 
+def run_monte_carlo(density, T, iterations):
+    #Check density is > 0
+    if sum(density) <= 0:
+        raise Exception("Must have positive density!")
 
-density=[0,9,2,1,6]
-T=200
-iter = 5
-for x in range(iter):
-    #Move a particle left or right
-    new_density = move_random_particle(density)
-    #Compute old and new energys
-    energy = energy_function.energy(density)
-    energy_new = energy_function.energy(new_density)
-    #If second is lower accept move. If higher, accept with a given probability
-    if energy_new < energy:
-        density=new_density[:]
-    else:
-        p0 = compute_boltzman(energy,energy_new,T)
-        p1 = random()
-        if p0 > p1:
+    for x in range(iterations):
+        #Move a particle left or right
+        new_density = move_random_particle(density)
+        #Compute old and new energys
+        energy = energy_function.energy(density)
+        energy_new = energy_function.energy(new_density)
+        #If second is lower accept move. If higher, accept with a given probability
+        if energy_new < energy:
             density=new_density[:]
+        else:
+            p0 = compute_boltzman(energy,energy_new,T)
+            p1 = random()
+            if p0 > p1:
+                density=new_density[:]
 
-    #Plot density at this iteration
-    
-    print density
+        return density
 
 
 
@@ -37,11 +32,17 @@ def move_random_particle(density):
     #find number of particles
     number_particles = sum(density)
     
-    #pick a random particle
-    random_particle = randint(1,number_particles)
-    
-    #find container that holds this particle
-    random_particles_bin = find_particles_bin(density,random_particle)
+    bin_filled = False
+    while bin_filled != True:
+        #pick a random particle
+        random_particle = randint(1,number_particles)
+
+        #find container that holds this particle
+        random_particles_bin = find_particles_bin(density,random_particle)
+
+        #Check there are particles in that container
+        if density[random_particles_bin] > 0:
+            bin_filled = True
     
     #move this particle left or right with equal probability
     new_density = density[:]
@@ -64,59 +65,10 @@ def find_particles_bin(density, particle_number):
             return index
 
 def compute_boltzman(energy,energy_new,T):
-    p0 = exp(-(energy-energy_old)/T)
+    p0 = exp(-(energy_new-energy)/T)
     return p0
           
-#def determine_acceptance():
-#def plot_density():
 
-
-# In[113]:
-
-
-
-
-# In[42]:
-
-
-
-
-# In[12]:
-
-
-
-
-# In[34]:
-
-
-
-
-# In[34]:
-
-
-
-
-# In[34]:
-
-
-
-
-# In[34]:
-
-
-
-
-# In[34]:
-
-
-
-
-# In[34]:
-
-
-
-
-# In[ ]:
 
 
 
