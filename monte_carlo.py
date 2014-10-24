@@ -9,6 +9,14 @@ def run_monte_carlo(density, T, iterations):
     if sum(density) <= 0:
         raise Exception("Must have positive density!")
 
+    #Check no bins with negative particles
+    neg_parts = False
+    for item in density:
+        if item <0:
+            neg_parts = True
+    if neg_parts == True:
+        raise Exception("Can't have negative particle number")
+
     for x in range(iterations):
         #Move a particle left or right
         new_density = move_random_particle(density)

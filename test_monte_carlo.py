@@ -39,3 +39,8 @@ def test_positive_density():
 	with assert_raises(Exception) as exception:
 		monte_carlo.run_monte_carlo(density,10,1)
 
+def test_pos_particle_number():
+	from nose.tools import assert_raises
+	density = [1,-2,5]
+	with assert_raises(Exception) as exception:
+		monte_carlo.run_monte_carlo(density,10,1)
